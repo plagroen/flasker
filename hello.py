@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash
+from flask import Flask, render_template, flash, request
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
@@ -8,9 +8,7 @@ from datetime import datetime
 # Create a Flask Instance
 app = Flask(__name__)
 # add database
-# Old SQLite DB
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
-# New MySQL db
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:rootpwd@localhost/flasker'
 # secret key (CSRF token)
 app.config['SECRET_KEY'] = "my super secret key that nobody is supposed to know"
@@ -52,17 +50,6 @@ def index():
 		stuff=stuff,
 		favorite_pizza=favorite_pizza)
 
-#def index():
-#	return "<h1>Hello World!</h1>"
-
-# JINJA FILTERS
-# safe
-# capitalize
-# lower
-# upper
-# title
-# trim
-# striptags
 
 @app.route('/user/add', methods=['GET', 'POST'])
 def add_user():
@@ -84,9 +71,28 @@ def add_user():
 		name=name,
 		our_users=our_users)
 
+@app.route('/update/<int:id>', methods=['GET', 'POST'])
+def update(id):
+	form=UserForm()
+	user_to_update = Users.query.get_or_404(id)
+	if request.method == 'POST':
+		user_to_update.name = request.form['name']
+		user_to_update.email = request.form['email']
+		try:
+			db.session.commit()
+			flash('User updated succesfully')
+		except:
+			flash('Error. Looks like there was a problem. Try again...')
+		return render_template("update.html",
+			form=form,
+			user_to_update=user_to_update)
+	else:
+		return render_template("update.html",
+			form=form,
+			user_to_update=user_to_update)
+
 # localhost:5000/user/john
 @app.route('/user/<name>')
-
 def user(name):
 	return render_template("user.html", user_name=name)
 
