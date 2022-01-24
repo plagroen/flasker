@@ -1,33 +1,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
-	{% if name %}
-		<h1>Update user!</h1>
-		<br/>
-		<br/><br/><br/>
-		<table class="table table-hover table-bordered table-striped">
-		{% for our_user in our_users %}
-			<tr>
-				<td> {{ our_user.id }}. {{ our_user.name }} - {{ our_user.email }} </td>
-			</tr>
-		{% endfor %}
-		</table>
-	{% else %}
-		<h1>Update user...:</h1>
-		<br/>
-		<div class="shadow p-3 mb-5 bg-body rounded">
-			<form action="/update/{{ user_to_update.id }}" method="POST">
-				{{ form.hidden_tag() }}
 
-				{{ form.name.label(class="form-label") }}
-				{{ form.name(class="form-control", value=user_to_update.name) }}
-				<br/>
-				{{ form.email.label(class="form-label") }}
-				{{ form.email(class="form-control", value=user_to_update.email) }}
-				<br/>
+	<h1>Update user...:</h1>
+	<br/>
+	<div class="shadow p-3 mb-5 bg-body rounded">
+		<form action="/update/{{ user_to_update.id }}" method="POST">
+			{{ form.hidden_tag() }}
 
-				{{ form.submit(class="btn btn-secondary") }}
-			</form>
-		</div>
-	{% endif %}
+			{{ form.name.label(class="form-label") }}
+			{{ form.name(class="form-control", value=user_to_update.name) }}
+			<br/>
+			{{ form.email.label(class="form-label") }}
+			{{ form.email(class="form-control", value=user_to_update.email) }}
+			<br/>
+			{{ form.favorite_color.label(class="form-label") }}
+			{{ form.favorite_color(class="form-control", value=user_to_update.favorite_color) }}
+			<br/>
+			{{ form.submit(class="btn btn-secondary") }}
+			<a href="{{ url_for('delete', id=user_to_update.id) }}" class="btn btn-danger">Delete</a>
+		</form>
+	</div>
+
 {% endblock %}
