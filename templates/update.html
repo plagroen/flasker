@@ -4,25 +4,44 @@
 
 	<h1>Update user...:</h1>
 	<br/>
-	<div class="shadow p-3 mb-5 bg-body rounded">
-		<form action="/update/{{ user_to_update.id }}" method="POST">
-			{{ form.hidden_tag() }}
+	{% if current_user.id == user_to_update.id %}
+		<div class="shadow p-3 mb-5 bg-body rounded">
+			<form action="/update/{{ user_to_update.id }}" enctype="multipart/form-data" method="POST">
+				{{ form.hidden_tag() }}
 
-			{{ form.name.label(class="form-label") }}
-			{{ form.name(class="form-control", value=user_to_update.name) }}
-			<br/>
-			{{ form.username.label(class="form-label") }}
-			{{ form.username(class="form-control", value=user_to_update.username) }}
-			<br/>
-			{{ form.email.label(class="form-label") }}
-			{{ form.email(class="form-control", value=user_to_update.email) }}
-			<br/>
-			{{ form.favorite_color.label(class="form-label") }}
-			{{ form.favorite_color(class="form-control", value=user_to_update.favorite_color) }}
-			<br/>
-			{{ form.submit(class="btn btn-secondary") }}
-			<a href="{{ url_for('delete', id=user_to_update.id) }}" class="btn btn-danger">Delete</a>
-		</form>
-	</div>
+				{{ form.name.label(class="form-label") }}
+				{{ form.name(class="form-control", value=user_to_update.name) }}
+				<br/>
+				{{ form.username.label(class="form-label") }}
+				{{ form.username(class="form-control", value=user_to_update.username) }}
+				<br/>
+				{{ form.email.label(class="form-label") }}
+				{{ form.email(class="form-control", value=user_to_update.email) }}
+				<br/>
+				{{ form.favorite_color.label(class="form-label") }}
+				{{ form.favorite_color(class="form-control", value=user_to_update.favorite_color) }}
+				<br/>
+				{{ form.about_author.label(class="form-label") }}<br/>
+				<textarea class="form-control" name="about_author">{{ user_to_update.about_author }}</textarea>
+				
+				<!-- {{ form.about_author(class="form-control", value=user_to_update.about_author) }} -->
+				<!-- Above line doesn't work, due to the control being a textarea. We've got to hack -->
+				<!-- around it by manually creating and setting the textarea. -->
+				<br/>
+				{{ form.profile_picture.label(class="form-label") }}
+				{{ form.profile_picture(class="form-control", value=user_to_update.profile_picture) }}
+				<br/>
+				{{ form.submit(class="btn btn-secondary") }}
+				<a href="javascript:history.back()" class="btn btn-secondary">Cancel</a>
+				<a href="{{ url_for('delete', id=user_to_update.id) }}" class="btn btn-danger">Delete</a>
+			</form>
+		</div>
+	{% else %}
+		<div class="shadow p-3 mb-5 bg-body rounded">
+			<h2>Denied</h2>
+			<p>Something went wrong. Please logout, login and try again.</p>
+			<a href="{{ url_for('logout') }}" class="btn btn-secondary">Logout</a>
+		</div>
+	{% endif %}
 
 {% endblock %}

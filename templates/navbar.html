@@ -19,6 +19,11 @@
           <a class="nav-link" href="{{ url_for('posts') }}">Blog Posts</a>
         </li>
         {% if current_user.is_authenticated %}
+          {% if current_user.username == 'plagroen' %}
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('admin') }}">Admin</a>
+            </li>
+          {% endif %}
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a>
           </li>
@@ -34,8 +39,9 @@
           </li>  
         {% endif %}
       </ul>
-      <form class="d-flex">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+      <form method="POST" action="{{ url_for('search') }}" class="d-flex">
+        {{ form.hidden_tag() }}
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search", name="search_string">
         <button class="btn btn-outline-secondary" type="submit">Search</button>
       </form>
     </div>
